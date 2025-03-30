@@ -1,7 +1,9 @@
+import styles from './page.module.sass';
+
 export default function Home() {
   return (
     <div>
-      <h1 className="text-red-600">Hello world!</h1>
+      <h1 className={styles.title}>Hello world!</h1>
     </div>
   );
 }
