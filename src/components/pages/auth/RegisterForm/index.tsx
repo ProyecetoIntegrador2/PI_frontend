@@ -10,9 +10,10 @@ import { Checkbox } from "@/components/ui/checkbox"
 import Link from "next/link"
 import { useState } from "react"
 import { Stepper } from "@/components/shared/Stepper"
+import { useStepper } from "@/hooks/useStepper"
 
 export default function MultiStepRegisterForm() {
-  const [step, setStep] = useState(1)
+  const { step, nextStep, prevStep, isFirstStep, isLastStep } = useStepper({ totalSteps: 3 })
   const [agreed, setAgreed] = useState(false)
   const [formData, setFormData] = useState({
     // Step 1
@@ -37,18 +38,6 @@ export default function MultiStepRegisterForm() {
       ...formData,
       [field]: value,
     })
-  }
-
-  const nextStep = () => {
-    if (step < 3) {
-      setStep(step + 1)
-    }
-  }
-
-  const prevStep = () => {
-    if (step > 1) {
-      setStep(step - 1)
-    }
   }
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -237,7 +226,7 @@ export default function MultiStepRegisterForm() {
                 </Button>
               )}
 
-              {step < 3 ? (
+              {!isLastStep ? (
                 <Button type="button" onClick={nextStep} disabled={step === 1 && !agreed} className="flex-1">
                   Siguiente
                 </Button>
