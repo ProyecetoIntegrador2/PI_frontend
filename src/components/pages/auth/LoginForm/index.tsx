@@ -23,7 +23,7 @@ function index() {
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <Label htmlFor="password">Contraseña</Label>
-                <Link href="/forgot-password" className="text-sm text-primary hover:underline">
+                <Link href="/auth/forgotPassword" className="text-sm text-primary hover:underline">
                   Olvidaste la contraseña?
                 </Link>
               </div>
@@ -35,7 +35,7 @@ function index() {
           <Button className="w-full">Iniciar Sesión</Button>
           <div className="text-center text-sm">
             No tienes una cuenta?{" "}
-            <Link href="/signup" className="text-primary hover:underline">
+            <Link href="/auth/signUp" className="text-primary hover:underline">
               Registrarse
             </Link>
           </div>
