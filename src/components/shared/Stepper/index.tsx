@@ -1,45 +1,91 @@
-interface StepperProps {
-  steps: string[]
-  currentStep: number
-}
+import {
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { ReactNode } from "node_modules/react-resizable-panels/dist/declarations/src/vendor/react";
+import { UseFormHandleSubmit, FieldValues } from "react-hook-form";
+import { StepperHeader } from "./StepperHeader";
+import { Button } from "@/components/ui/button";
+import { Form } from "@/components/ui/form";
 
-export const Stepper: React.FC<StepperProps> = ({ steps, currentStep }) => {
+type StepperProps = {
+  children: ReactNode;
+  steps: string[];
+  step: number;
+  prevStep: () => void;
+  nextStep: () => void;
+  isLastStep: boolean;
+  title: string;
+  description: string;
+  onSubmit: (data: any) => void;
+  handleSubmit: UseFormHandleSubmit<FieldValues>;
+  form: any;
+};
+
+export const Stepper: React.FC<StepperProps> = ({
+  children,
+  steps,
+  onSubmit,
+  handleSubmit,
+  title,
+  description,
+  step,
+  prevStep,
+  nextStep,
+  isLastStep,
+  form,
+}) => {
+
+  console.log(form.watch());
   return (
-    <div className="relative flex justify-between items-center mt-4 py-4">
-      {steps.map((label, index) => {
-        const stepNumber = index + 1
-        const isCompleted = currentStep > stepNumber
-        const isActive = currentStep === stepNumber
+    <>
+      <CardHeader className="space-y-1">
+        <CardTitle className="text-2xl font-bold text-center">
+          {/* Crear cuenta */}
+          {title}
+        </CardTitle>
+        <CardDescription className="text-center">
+          {/* Completa el formulario para registrarte */}
+          {description}
+        </CardDescription>
+        <StepperHeader currentStep={step} steps={steps} />
+      </CardHeader>
+      <Form {...form}>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <CardContent>{children}</CardContent>
+          <CardFooter>
+            <div className="flex w-full space-x-2 mt-6">
+              {step > 1 && (
+                <Button
+                  type="button"
+                  className="outline flex-1"
+                  onClick={prevStep}
+                >
+                  Anterior
+                </Button>
+              )}
 
-        return (
-          <div key={stepNumber} className="z-10 flex flex-col items-center">
-            <div
-              className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
-                isActive
-                  ? "bg-primary text-primary-foreground"
-                  : isCompleted
-                  ? "bg-primary/80 text-primary-foreground"
-                  : "bg-gray-200 text-gray-500"
-              }`}
-            >
-              {isCompleted ? "✓" : stepNumber}
+              {!isLastStep ? (
+                <Button
+                  type="button"
+                  onClick={nextStep}
+                  // disabled={step === 1}
+                  className="flex-1"
+                >
+                  Siguiente
+                </Button>
+              ) : (
+                <Button type="submit" className="flex-1">
+                  Registrarse
+                </Button>
+              )}
             </div>
-            <span className="text-xs mt-1 text-center">{label}</span>
-          </div>
-        )
-      })}
-
-      {/* Connecting lines */}
-      <div className="absolute top-8 left-0 right-0 flex justify-center w-full px-10">
-        {steps.slice(1).map((_, index) => (
-          <div
-            key={index}
-            className={`h-0.5 flex-1 ${
-              currentStep > index + 1 ? "bg-primary" : "bg-gray-200"
-            }`}
-          />
-        ))}
-      </div>
-    </div>
-  )
-}
+          </CardFooter>
+        </form>
+      </Form>
+    </>
+  );
+};

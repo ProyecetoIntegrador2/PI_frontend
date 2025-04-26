@@ -1,16 +1,26 @@
 import { useState } from "react"
+import { Path, UseFormReturn, FieldValues } from "react-hook-form";
+import { ZodObject, ZodRawShape } from "zod";
 
-export interface UseStepperProps {
+export interface UseStepperProps<T extends FieldValues> {
   initialStep?: number
   totalSteps: number
+  methods: UseFormReturn<T>;
+  combinedSchema: ZodObject<ZodRawShape>;
 }
 
-export function useStepper({ initialStep = 1, totalSteps }: UseStepperProps) {
+export function useStepper<T extends FieldValues>({ initialStep = 1, totalSteps, methods, combinedSchema }: UseStepperProps<T>) {
   const [step, setStep] = useState(initialStep)
 
-  const nextStep = () => {
-    setStep((prev) => (prev < totalSteps ? prev + 1 : prev))
-  }
+  const nextStep = async () => {
+    const typeCombinedSchema = Object.keys(combinedSchema.shape);
+    const isValid = await methods.trigger(typeCombinedSchema[step - 1] as Path<T>);
+
+    console.log("errors", methods.formState.errors.name?.message);
+    if (isValid) {
+      setStep((prev) => (prev < totalSteps ? prev + 1 : prev))
+    }
+  };
 
   const prevStep = () => {
     setStep((prev) => (prev > 1 ? prev - 1 : prev))

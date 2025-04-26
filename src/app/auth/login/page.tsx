@@ -1,4 +1,4 @@
-import LoginForm from '@/components/pages/auth/LoginForm'
+import LoginForm from '@/components/modules/auth/LoginForm'
 
 function index() {
   return (
