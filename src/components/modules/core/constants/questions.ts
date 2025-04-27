@@ -35,3 +35,18 @@ export const options = {
     "Visionaria y transformadora, con TI como eje central del desarrollo empresarial.",
   ],
 };
+
+export const defaultValues = {
+  stepOne: {
+    q1ActualLevel: 0,
+    q1TargetLevel: 0,
+    q2ActualLevel: 0,
+    q2TargetLevel: 0,
+    q3ActualLevel: 0,
+    q3TargetLevel: 0,
+    q4ActualLevel: 0,
+    q4TargetLevel: 0,
+    q5ActualLevel: 0,
+    q5TargetLevel: 0,
+  },
+};
