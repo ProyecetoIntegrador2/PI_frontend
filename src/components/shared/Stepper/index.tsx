@@ -5,25 +5,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { ReactNode } from "node_modules/react-resizable-panels/dist/declarations/src/vendor/react";
-import { UseFormHandleSubmit, FieldValues } from "react-hook-form";
 import { StepperHeader } from "./StepperHeader";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
-
-type StepperProps = {
-  children: ReactNode;
-  steps: string[];
-  step: number;
-  prevStep: () => void;
-  nextStep: () => void;
-  isLastStep: boolean;
-  title: string;
-  description: string;
-  onSubmit: (data: any) => void;
-  handleSubmit: UseFormHandleSubmit<FieldValues>;
-  form: any;
-};
+import { StepperProps } from "../interfaces/StepperProps";
 
 export const Stepper: React.FC<StepperProps> = ({
   children,
@@ -38,20 +23,19 @@ export const Stepper: React.FC<StepperProps> = ({
   isLastStep,
   form,
 }) => {
-
   console.log(form.watch());
   return (
     <>
       <CardHeader className="space-y-1">
         <CardTitle className="text-2xl font-bold text-center">
-          {/* Crear cuenta */}
           {title}
         </CardTitle>
         <CardDescription className="text-center">
-          {/* Completa el formulario para registrarte */}
           {description}
         </CardDescription>
-        <StepperHeader currentStep={step} steps={steps} />
+        <div className={steps.length === 1 ? "flex justify-center" : ""}>
+          <StepperHeader currentStep={step} steps={steps} />
+        </div>
       </CardHeader>
       <Form {...form}>
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -72,14 +56,13 @@ export const Stepper: React.FC<StepperProps> = ({
                 <Button
                   type="button"
                   onClick={nextStep}
-                  // disabled={step === 1}
                   className="flex-1"
                 >
                   Siguiente
                 </Button>
               ) : (
                 <Button type="submit" className="flex-1">
-                  Registrarse
+                  Enviar
                 </Button>
               )}
             </div>

@@ -2,7 +2,6 @@
 
 import type React from "react";
 import { Card } from "@/components/ui/card";
-import { useState } from "react";
 import { Stepper } from "@/components/shared/Stepper";
 import { useStepper } from "@/hooks/useStepper";
 import StepOne from "./StepOne";
