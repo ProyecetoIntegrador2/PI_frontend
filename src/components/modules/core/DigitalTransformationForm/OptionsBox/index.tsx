@@ -5,8 +5,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { cn } from "@/lib/utils";
-import { RadioGroup } from "@radix-ui/react-radio-group";
 import { Control, FieldPath, FieldValues } from "react-hook-form";
 
 interface IndexProps<T extends FieldValues> {
@@ -16,74 +14,65 @@ interface IndexProps<T extends FieldValues> {
   optionsList: string[];
 }
 
-function index<T extends FieldValues>({
+function Index<T extends FieldValues>({
   control,
   stepActualLevel,
   stepTargetLevel,
   optionsList,
 }: IndexProps<T>) {
   return (
-    <div className="flex flex-col md:flex-row md:space-x-10 space-y-6 md:space-y-0 bg-gray-100/70 p-6 rounded-xl shadow-sm">
+    <div className="bg-gray-100/70 p-6 rounded-xl shadow-sm space-y-4">
+      {/* Encabezado de opciones */}
+      <div className="grid grid-cols-[150px_repeat(auto-fill,_minmax(120px,_1fr))] items-center gap-2 font-semibold text-sm text-slate-700">
+        <div></div>
+        {optionsList.map((option, index) => (
+          <div key={index} className="text-center">
+            {option}
+          </div>
+        ))}
+      </div>
+
+      {/* Nivel Actual */}
       <FormField
         control={control}
         name={stepActualLevel}
         render={({ field }) => (
-          <FormItem>
-            <FormLabel>Nivel Actual:</FormLabel>
-            <FormControl>
-              <RadioGroup
-                onValueChange={field.onChange}
-                defaultValue={String(field.value)}
-                className="grid grid-cols-2 gap-4"
-              >
-                {optionsList.map((text, index) => (
-                  <div
-                    key={index}
-                    className={cn(
-                      "border rounded-xl p-4 text-center cursor-pointer transition-all font-medium",
-                      field.value === index + 1
-                        ? "bg-slate-900 text-white border-slate-700 dark:bg-slate-800 dark:border-slate-600"
-                        : "border-slate-300 text-slate-700 hover:border-slate-600 dark:border-slate-700 dark:text-slate-400 dark:hover:border-slate-500"
-                    )}
-                    onClick={() => field.onChange(index + 1)}
-                  >
-                    {text}
-                  </div>
-                ))}
-              </RadioGroup>
-            </FormControl>
+          <FormItem className="grid grid-cols-[150px_repeat(auto-fill,_minmax(120px,_1fr))] items-center gap-2">
+            <FormLabel className="text-slate-700">Nivel Actual:</FormLabel>
+            {optionsList.map((_, index) => (
+              <FormControl key={index}>
+                <input
+                  type="radio"
+                  name={field.name}
+                  checked={field.value === index + 1}
+                  onChange={() => field.onChange(index + 1)}
+                  className="mx-auto h-4 w-4 text-slate-900 accent-slate-900 focus:ring-slate-700 focus:outline-none"
+                />
+              </FormControl>
+            ))}
             <FormMessage />
           </FormItem>
         )}
       />
+
+      {/* Nivel Deseado */}
       <FormField
         control={control}
         name={stepTargetLevel}
         render={({ field }) => (
-          <FormItem>
-            <FormLabel>Nivel Deseado:</FormLabel>
-            <FormControl>
-              <RadioGroup
-                onValueChange={field.onChange}
-                defaultValue={String(field.value)}
-                className="grid grid-cols-2 gap-4"
-              >
-                {optionsList.map((text, index) => (
-                  <div
-                    key={index}
-                    className={cn(
-                      "border rounded-xl p-4 text-center cursor-pointer transition-all font-medium",
-                      field.value === index + 1
-                        ? "bg-slate-900 text-white border-slate-700 dark:bg-slate-800 dark:border-slate-600"
-                        : "border-slate-300 text-slate-700 hover:border-slate-600 dark:border-slate-700 dark:text-slate-400 dark:hover:border-slate-500"
-                    )}
-                    onClick={() => field.onChange(index + 1)}
-                  >
-                    {text}
-                  </div>
-                ))}
-              </RadioGroup>
-            </FormControl>
+          <FormItem className="grid grid-cols-[150px_repeat(auto-fill,_minmax(120px,_1fr))] items-center gap-2">
+            <FormLabel className="text-slate-700">Nivel Deseado:</FormLabel>
+            {optionsList.map((_, index) => (
+              <FormControl key={index}>
+                <input
+                  type="radio"
+                  name={field.name}
+                  checked={field.value === index + 1}
+                  onChange={() => field.onChange(index + 1)}
+                  className="mx-auto h-4 w-4 text-slate-900 accent-slate-900 focus:ring-slate-700 focus:outline-none"
+                />
+              </FormControl>
+            ))}
             <FormMessage />
           </FormItem>
         )}
@@ -92,4 +81,4 @@ function index<T extends FieldValues>({
   );
 }
 
-export default index;
+export default Index;
