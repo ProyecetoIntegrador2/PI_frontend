@@ -33,7 +33,7 @@ function Dashboard({ id }: { id: string }) {
     const fetchData = async () => {
       try {
         setLoading(true)
-        const response = await fetch("http://localhost:8080/api/submission?userId=1")
+        const response = await fetch(`http://localhost:8080/api/submission?userId=${id}`)
         if (!response.ok) throw new Error("Error al obtener los datos")
         const submissions: Submission[] = await response.json()
         setData(submissions[submissions.length - 1])
