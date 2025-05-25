@@ -39,6 +39,9 @@ function DigitalTransformationForm() {
   }>({
     resolver: zodResolver(combinatedSchema),
     defaultValues: defaultValues,
+    mode: "onSubmit", // <- importante
+    shouldFocusError: false,
+    criteriaMode: "firstError",
   });
 
   const { step, nextStep, prevStep, isLastStep } = useStepper({
@@ -362,7 +365,7 @@ function DigitalTransformationForm() {
           averageDesiredScore:
             resultData.submissionParts[6].submissionPartMetrics
               .averageDesiredScore,
-        }
+        },
       ]);
     } catch (error) {
       console.error("Error al hacer la solicitud:", error);

@@ -244,6 +244,42 @@ export const options = {
     "Entusiasta y orientada a la eficiencia.",
     "Visionaria y pionera, buscando constantemente liderar a través de la tecnología.",
   ],
+  q36:[
+    "Menos de 2 años",
+    "2-5 años",
+    "6-10 años",
+    "Más de 10 años",
+  ],
+  q37:[
+    "Desarrollador de software",
+    "Analista de sistemas",
+    "Gerente / Coordinador/ Jefe de TI",
+    "Consultor en transformación digital",
+    "Cientifico/ Analista de Datos",
+    "Profesional en Ciberseguridad"
+  ],
+  q38:[
+    "Pública",
+    "Privada",
+    "Mixta",
+  ],
+  q39:[
+    "Tecnología y Software (Desarrollo de software, IA, Ciberseguridad, etc.) Telecomunicaciones (Redes, 5G)",
+    "Finanzas y Banca",
+    "Salud",
+    "Educación",
+    "Retail y Comercio Electrónico",
+    "Gobierno y Sector Público",
+    "Consultoría (Consultoría TI, Transformación digital)",
+    "Legal y Asesoría",
+    "Servicios (Energía, Acueducto, transporte, agricultura , entretenimiento, Construcción y Bienes Raíces, otros)",
+  ],
+  q40:[
+    "Menos de 50",
+    "50-250",
+    "250-1000",
+    "Más de 1000",
+  ],
 };
 
 

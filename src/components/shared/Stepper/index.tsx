@@ -23,7 +23,6 @@ export const Stepper: React.FC<StepperProps> = ({
   isLastStep,
   form,
 }) => {
-  console.log(form.watch());
   return (
     <>
       <CardHeader className="space-y-1">
