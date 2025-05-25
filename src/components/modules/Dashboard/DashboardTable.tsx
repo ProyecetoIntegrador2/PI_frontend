@@ -2,6 +2,10 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { Submission } from "./types"
 
+function formatScore(score: number) {
+  return Number.isInteger(score) ? score : score.toFixed(1)
+}
+
 export const DashboardTable = ({
   data,
   colors,
@@ -28,7 +32,7 @@ export const DashboardTable = ({
                 <td className="p-3" style={{ color: colors.primary }}>
                   <div className="flex items-center">
                     <span className="font-medium mr-2">
-                      {part.submissionPartMetrics.averageActualScore.toFixed(1)}
+                      {formatScore(part.submissionPartMetrics.averageActualScore)}
                     </span>
                     <Progress
                       value={part.submissionPartMetrics.averageActualScore * 20}
@@ -40,7 +44,7 @@ export const DashboardTable = ({
                 <td className="p-3" style={{ color: colors.primary }}>
                   <div className="flex items-center">
                     <span className="font-medium mr-2">
-                      {part.submissionPartMetrics.averageDesiredScore.toFixed(1)}
+                      {formatScore(part.submissionPartMetrics.averageDesiredScore)}
                     </span>
                     <Progress
                       value={part.submissionPartMetrics.averageDesiredScore * 20}
@@ -50,10 +54,10 @@ export const DashboardTable = ({
                   </div>
                 </td>
                 <td className="p-3" style={{ color: colors.primary }}>
-                  {(
+                  {formatScore(
                     part.submissionPartMetrics.averageDesiredScore -
                     part.submissionPartMetrics.averageActualScore
-                  ).toFixed(1)}
+                  )}
                 </td>
               </tr>
             ))}
@@ -62,15 +66,15 @@ export const DashboardTable = ({
             <tr style={{ backgroundColor: `${colors.border}30` }}>
               <td className="p-3 font-bold" style={{ color: colors.primary }}>Promedio General</td>
               <td className="p-3 font-bold" style={{ color: colors.primary }}>
-                {data.submissionMetrics.averageActualScore.toFixed(1)}
+                {formatScore(data.submissionMetrics.averageActualScore)}
               </td>
               <td className="p-3 font-bold" style={{ color: colors.primary }}>
-                {data.submissionMetrics.averageDesiredScore.toFixed(1)}
+                {formatScore(data.submissionMetrics.averageDesiredScore)}
               </td>
               <td className="p-3 font-bold" style={{ color: colors.primary }}>
-                {(
+                {formatScore(
                   data.submissionMetrics.averageDesiredScore - data.submissionMetrics.averageActualScore
-                ).toFixed(1)}
+                )}
               </td>
             </tr>
           </tfoot>
