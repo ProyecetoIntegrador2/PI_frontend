@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   PieChartIcon,
@@ -22,6 +22,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { DownloadIcon, ChevronDownIcon } from "lucide-react";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
+import React from "react";
 
 function Dashboard({ id }: { id: string }) {
   const [data, setData] = useState<Submission | null>(null);
@@ -42,6 +45,9 @@ function Dashboard({ id }: { id: string }) {
     warning: "#F59E0B",
     error: "#EF4444",
   };
+
+  const dashboardRef = useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -64,11 +70,6 @@ function Dashboard({ id }: { id: string }) {
     };
     fetchData();
   }, []);
-
-  const handleExportPDF = () => {
-    // Aquí irá la lógica para exportar a PDF
-    console.log("Exportar a PDF");
-  };
 
   if (loading) {
     return (
@@ -115,6 +116,26 @@ function Dashboard({ id }: { id: string }) {
 
   const radarData = prepareRadarData(data);
   const barData = prepareBarData(data);
+
+  const handleDownloadPDF = async () => {
+    try {
+      const response = await fetch("/api/pdf");
+      if (!response.ok) throw new Error("Error al generar el PDF");
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+
+      // Crear un enlace para descargar el PDF
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "dashboard.pdf";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      alert("No se pudo generar el PDF");
+    }
+  };
 
   return (
     <div
@@ -165,84 +186,97 @@ function Dashboard({ id }: { id: string }) {
             </DropdownMenu>
             <Button
               variant="outline"
-              onClick={handleExportPDF}
               className="flex items-center cursor-pointer gap-2"
+              onClick={handleDownloadPDF}
             >
               <DownloadIcon className="w-4 h-4" />
               Exportar PDF
             </Button>
           </div>
         </div>
-
-        <DashboardSummaryCards data={data} colors={colors} />
-        <Tabs defaultValue="radar" className="mb-8">
-          <div className="flex justify-between items-center mb-4">
-            <h2
-              className="text-2xl font-bold"
-              style={{ color: colors.primary }}
-            >
-              Análisis por Dimensión
-            </h2>
-            <TabsList style={{ backgroundColor: colors.card }}>
-              <TabsTrigger
-                value="radar"
-                className="data-[state=active]:text-white"
-                style={{
-                  color: colors.primary,
-                  backgroundColor: "transparent",
-                  ["--tw-ring-color" as any]: colors.accent,
-                }}
-              >
-                <PieChartIcon className="h-4 w-4 mr-2" />
-                Radar
-              </TabsTrigger>
-              <TabsTrigger
-                value="bar"
-                className="data-[state=active]:text-white"
-                style={{
-                  color: colors.primary,
-                  backgroundColor: "transparent",
-                  ["--tw-ring-color" as any]: colors.accent,
-                }}
-              >
-                <BarChart3Icon className="h-4 w-4 mr-2" />
-                Barras
-              </TabsTrigger>
-              <TabsTrigger
-                value="table"
-                className="data-[state=active]:text-white"
-                style={{
-                  color: colors.primary,
-                  backgroundColor: "transparent",
-                  ["--tw-ring-color" as any]: colors.accent,
-                }}
-              >
-                <ActivityIcon className="h-4 w-4 mr-2" />
-                Tabla
-              </TabsTrigger>
-            </TabsList>
+        {/* Renderizado condicional por métrica */}
+        {selectedMetric === "Métrica 1" ? (
+          <div ref={dashboardRef} id="pagina-completa">
+            <DashboardSummaryCards data={data} colors={colors} />
+            <Tabs defaultValue="radar" className="mb-8">
+              <div className="flex justify-between items-center mb-4">
+                <h2
+                  className="text-2xl font-bold"
+                  style={{ color: colors.primary }}
+                >
+                  Análisis por Dimensión
+                </h2>
+                <TabsList style={{ backgroundColor: colors.card }}>
+                  <TabsTrigger
+                    value="radar"
+                    className="data-[state=active]:text-white"
+                    style={{
+                      color: colors.primary,
+                      backgroundColor: "transparent",
+                      ["--tw-ring-color" as any]: colors.accent,
+                    }}
+                  >
+                    <PieChartIcon className="h-4 w-4 mr-2" />
+                    Radar
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="bar"
+                    className="data-[state=active]:text-white"
+                    style={{
+                      color: colors.primary,
+                      backgroundColor: "transparent",
+                      ["--tw-ring-color" as any]: colors.accent,
+                    }}
+                  >
+                    <BarChart3Icon className="h-4 w-4 mr-2" />
+                    Barras
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="table"
+                    className="data-[state=active]:text-white"
+                    style={{
+                      color: colors.primary,
+                      backgroundColor: "transparent",
+                      ["--tw-ring-color" as any]: colors.accent,
+                    }}
+                  >
+                    <ActivityIcon className="h-4 w-4 mr-2" />
+                    Tabla
+                  </TabsTrigger>
+                </TabsList>
+              </div>
+              <TabsContent value="radar" className="mt-0">
+                <DashboardCharts
+                  radarData={radarData}
+                  barData={[]}
+                  colors={colors}
+                  type="radar"
+                />
+              </TabsContent>
+              <TabsContent value="bar" className="mt-0">
+                <DashboardCharts
+                  radarData={[]}
+                  barData={barData}
+                  colors={colors}
+                  type="bar"
+                />
+              </TabsContent>
+              <TabsContent value="table" className="mt-0">
+                <DashboardTable data={data} colors={colors} />
+              </TabsContent>
+            </Tabs>
+            <DashboardDetail data={data} colors={colors} />
           </div>
-          <TabsContent value="radar" className="mt-0">
-            <DashboardCharts
-              radarData={radarData}
-              barData={[]}
-              colors={colors}
-              type="radar"
-            />
-          </TabsContent>
-          <TabsContent value="bar" className="mt-0">
-            <DashboardCharts
-              radarData={[]}
-              barData={barData}
-              colors={colors}
-              type="bar"
-            />
-          </TabsContent>
-          <TabsContent value="table" className="mt-0">
-            <DashboardTable data={data} colors={colors} />
-          </TabsContent>
-        </Tabs>
-        <DashboardDetail data={data} colors={colors} />
+        ) : (
+          <div className="flex flex-col items-center justify-center min-h-[300px]">
+            <h2 className="text-2xl font-bold mb-4" style={{ color: colors.primary }}>
+              {selectedMetric}
+            </h2>
+            <p className="text-lg" style={{ color: colors.secondary }}>
+              Esta métrica aún no está disponible.
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );
